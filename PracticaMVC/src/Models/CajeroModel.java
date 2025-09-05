@@ -30,6 +30,8 @@ public class CajeroModel {
     public Cuenta getCuentaActual() {
         return cuentaActual;
     }
+    public void setCuentaActual(Cuenta cuentaActual) {this.cuentaActual = cuentaActual;}
+    public Map<String, Cuenta> getCuentas() {return cuentas;}
 
     public double consultarSaldo() {
         return this.cuentaActual != null ? cuentaActual.getSaldo() : 0;
@@ -51,16 +53,22 @@ public class CajeroModel {
         return cuentas.containsKey(numCuenta);
     }
 
-    public boolean realizarTransferencia(String cuenta, double monto){
-        if(cuentaExiste(cuenta)){
-            Cuenta cuentaTransferir = cuentas.get(cuenta);
-            if(cuentaActual.transferir(cuentaTransferir, monto))
-                return true;
-        }
-        else{
-            System.out.println("La cuenta no existe");
+    public boolean realizarTransferencia(Cuenta cuentaTransferir, double monto){
+        if(cuentaActual.transferir(cuentaTransferir, monto))
+            return true;
+
+        return false;
+    }
+
+    public boolean cambiarPin(String pinNuevo) {
+        if(valirdarPin(pinNuevo)){
+            cuentaActual.cambiarPin(pinNuevo);
+            return true;
         }
         return false;
     }
 
+    public static boolean valirdarPin(String pin) {
+        return pin.matches("\\d{4}");
+    }
 }

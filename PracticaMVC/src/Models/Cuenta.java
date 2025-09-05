@@ -47,16 +47,15 @@ public class Cuenta {
             saldo += deposito;
     }
 
-    public boolean transferir(Cuenta cuenta, double monto){
-        if(this.retirar(cuenta.getSaldo())) {
-            cuenta.depositar(monto);
+    public boolean transferir(Cuenta cuentaTranferir, double monto){
+        if(this.retirar(monto)) {
+            cuentaTranferir.depositar(monto);
             return true;
         }
-        else
-            System.out.println("Fondos insuficientes");
-
         return false;
     }
 
-    //Diseñar los comportamientos restantes: transferir, cambiar nip.
+    public void cambiarPin(String pin){
+        this.pin = pin;
+    }
 }

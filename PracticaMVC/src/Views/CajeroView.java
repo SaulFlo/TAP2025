@@ -33,6 +33,7 @@ public class CajeroView {
         System.out.println("2. Realizar retiro");
         System.out.println("3. Realizar deposito");
         System.out.println("4. Realizar transferencia");
+        System.out.println("5. Cambiar pin");
         // Definir las opciones restantes
         System.out.println("9. Salir");
     }
@@ -49,8 +50,8 @@ public class CajeroView {
         System.out.println("======================================");
     }
 
-    public String solicitarCuenta(String operacion){
-        System.out.println("Ingresa la cuenta a " + operacion + ": ");
+    public String solicitarString(String solicitud){
+        System.out.println(solicitud);
         return sc.nextLine();
     }
 

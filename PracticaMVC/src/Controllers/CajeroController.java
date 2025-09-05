@@ -1,6 +1,7 @@
 package Controllers;
 
 import Models.CajeroModel;
+import Models.Cuenta;
 import Views.CajeroView;
 
 public class CajeroController {
@@ -50,6 +51,15 @@ public class CajeroController {
                 case 4:
                     realizarTransferencia();
                     break;
+                case 5:
+                    cambiarPin();
+                    break;
+                case 9:
+                    sesionActiva = false;
+                    model.setCuentaActual(null);
+                    break;
+                    default:
+                        view.mostrarMensaje("Opcion invalida");
             }
         }
     }
@@ -85,17 +95,32 @@ public class CajeroController {
     }
 
     public void realizarTransferencia(){
-        String cuenta = view.solicitarCuenta("Transferir");
+        String numCuenta = view.solicitarString("Ingrese el número de cuenta a la que se desea transferir:");
         double cantidad = view.solicitarCantidad("Transferir");
 
-        if (cantidad <= 0) {
-            view.mostrarMensaje("Error en la cantidad");
-            return;
+        if (model.cuentaExiste(numCuenta)) {
+            Cuenta cuentaTransferir = model.getCuentas().get(numCuenta);
+            if(model.getCuentaActual().transferir(cuentaTransferir, cantidad))
+                view.mostrarMensaje("Transferencia exitosa de $"+cantidad+" a la cuenta de "+cuentaTransferir.getTitular());
+            else
+                view.mostrarMensaje("Fondos insuficientes");
         }
-        if (model.realizarTransferencia(cuenta, cantidad)) {
-            view.mostrarMensaje("Transferencia exitosa de $"+cantidad);
-        }else{
-            view.mostrarMensaje("Error al procesar el deposito");
+        else {
+            view.mostrarMensaje("La cuenta a la que se intenta transferir no existe.");
         }
     }
+
+    public void cambiarPin(){
+        String pin = view.solicitarPin();
+        if (model.getCuentaActual().validarPin(pin)) {
+            String pinNuevo = view.solicitarString("Ingrese su pin nuevo");
+            if(model.cambiarPin(pinNuevo))
+                view.mostrarMensaje("Pin cambiado correctamente");
+            else
+                view.mostrarMensaje("El nuevo pin debe ser de 4 números.");
+        }
+        else
+            view.mostrarMensaje("Pin incorrecto. Para modificar el pin ocupamos validar.");
+    }
+
 }
